@@ -3,12 +3,7 @@ const { toJSON } = require('./plugins');
 
 const walletSchema = mongoose.Schema(
   {
-    airtime: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-    dataBundle: {
+    balance: {
       type: Number,
       required: true,
       default: 0,
