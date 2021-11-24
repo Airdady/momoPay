@@ -3,11 +3,11 @@
 const paginate = (schema) => {
   /**
    * @typedef {Object} QueryResult
-   * @property {Document[]} results - Results found
+   * @property {Document[]} records - Results found
    * @property {number} page - Current page
    * @property {number} limit - Maximum number of results per page
    * @property {number} totalPages - Total number of pages
-   * @property {number} totalResults - Total number of documents
+   * @property {number} totalRecords - Total number of documents
    */
   /**
    * Query for documents with pagination
@@ -53,14 +53,14 @@ const paginate = (schema) => {
     docsPromise = docsPromise.exec();
 
     return Promise.all([countPromise, docsPromise]).then((values) => {
-      const [totalResults, results] = values;
-      const totalPages = Math.ceil(totalResults / limit);
+      const [totalRecords, records] = values;
+      const totalPages = Math.ceil(totalRecords / limit);
       const result = {
-        results,
+        records,
         page,
         limit,
         totalPages,
-        totalResults,
+        totalRecords,
       };
       return Promise.resolve(result);
     });
