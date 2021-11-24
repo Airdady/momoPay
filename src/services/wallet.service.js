@@ -2,7 +2,7 @@ const Wallet = require('../models/wallet.model');
 const transactionService = require('./transaction.service');
 
 const creditWallet = async (data, user) => {
-  const wallet = await Wallet.findOne({ user: user.id });
+  const wallet = await Wallet.findOne({ user });
   const balanceBefore = wallet.balance;
   wallet.balance += data.amount;
   wallet.save();

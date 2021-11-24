@@ -9,9 +9,10 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('manageUsers'), walletController.creditWallet)
   .get(auth('manageUsers'), walletController.viewWallet)
   .patch(auth('manageUsers'), walletController.debitWallet);
+
+router.route('/:email').post(auth('manageUsers'), getReceiver, walletController.creditWallet);
 
 router.route('/send_credit').post(auth('manageUsers'), getReceiver, walletController.sendCredit);
 
