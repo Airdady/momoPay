@@ -1,12 +1,12 @@
 const { userService } = require('../services');
 
 const getReceiver = async (req, res, next) => {
-  const user = await userService.getUserByEmail(req.body.receiver);
-  if (user) {
-    req.receiver = user;
+  const user = await userService.getUserByPhoneNumber(req.params.phoneNumber);
+  if (!user) {
+    req.phoneNumber = user;
     return next();
   }
-  res.send('receiver not found');
+  res.send('Phone number is not in Our system');
 };
 
 module.exports.getReceiver = getReceiver;

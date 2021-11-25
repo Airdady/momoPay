@@ -11,10 +11,10 @@ const { tokenTypes } = require('../config/tokens');
  * @param {string} password
  * @returns {Promise<User>}
  */
-const loginUserWithEmailAndPassword = async (email, password) => {
-  const user = await userService.getUserByEmail(email);
+const loginUserWithPhoneAndPassword = async (phoneNumber, password) => {
+  const user = await userService.getUserByPhoneNumber(phoneNumber);
   if (!user || !(await user.isPasswordMatch(password))) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect PhoneNumber or password');
   }
   return user;
 };
@@ -91,7 +91,7 @@ const verifyEmail = async (verifyEmailToken) => {
 };
 
 module.exports = {
-  loginUserWithEmailAndPassword,
+  loginUserWithPhoneAndPassword,
   logout,
   refreshAuth,
   resetPassword,
