@@ -3,7 +3,7 @@ const { password } = require('./custom.validation');
 
 const register = {
   body: Joi.object().keys({
-    email: Joi.string().required().email(),
+    phoneNumber: Joi.string().required(),
     password: Joi.string().required().custom(password),
     name: Joi.string().required(),
   }),
@@ -11,7 +11,7 @@ const register = {
 
 const login = {
   body: Joi.object().keys({
-    email: Joi.string().required(),
+    phoneNumber: Joi.string().required(),
     password: Joi.string().required(),
   }),
 };
@@ -43,7 +43,7 @@ const resetPassword = {
   }),
 };
 
-const verifyEmail = {
+const verifyPhoneNumber = {
   query: Joi.object().keys({
     token: Joi.string().required(),
   }),
@@ -56,5 +56,5 @@ module.exports = {
   refreshTokens,
   forgotPassword,
   resetPassword,
-  verifyEmail,
+  verifyPhoneNumber,
 };

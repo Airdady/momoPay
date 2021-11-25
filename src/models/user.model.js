@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
@@ -16,10 +15,9 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: true,
       trim: true,
-      lowercase: true,
       validate(value) {
-        if (!validator.isEmail(value)) {
-          throw new Error('Invalid email');
+        if (!value.match(/[0-9]/)) {
+          throw new Error('Invalid PhoneNumber');
         }
       },
     },
@@ -40,7 +38,7 @@ const userSchema = mongoose.Schema(
       enum: roles,
       default: 'user',
     },
-    isEmailVerified: {
+    isPhoneNumberVerified: {
       type: Boolean,
       default: false,
     },
@@ -55,13 +53,13 @@ userSchema.plugin(toJSON);
 userSchema.plugin(paginate);
 
 /**
- * Check if email is taken
- * @param {string} email - The user's email
+ * Check if phoneNumber is taken
+ * @param {string} phoneNumber - The user's phoneNumber
  * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
  * @returns {Promise<boolean>}
  */
-userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
-  const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
+userSchema.statics.isPhoneNumberTaken = async function (phoneNumber, excludeUserId) {
+  const user = await this.findOne({ phoneNumber, _id: { $ne: excludeUserId } });
   return !!user;
 };
 
