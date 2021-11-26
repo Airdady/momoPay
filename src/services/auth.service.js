@@ -7,7 +7,7 @@ const { tokenTypes } = require('../config/tokens');
 
 /**
  * Login with username and password
- * @param {string} email
+ * @param {string} phoneNumber
  * @param {string} password
  * @returns {Promise<User>}
  */
@@ -72,21 +72,21 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
 };
 
 /**
- * Verify email
- * @param {string} verifyEmailToken
+ * Verify PhoneNumber
+ * @param {string} verifyPhoneNumberToken
  * @returns {Promise}
  */
-const verifyEmail = async (verifyEmailToken) => {
+const verifyPhoneNumber = async (verifyPhoneNumberToken) => {
   try {
-    const verifyEmailTokenDoc = await tokenService.verifyToken(verifyEmailToken, tokenTypes.VERIFY_EMAIL);
-    const user = await userService.getUserById(verifyEmailTokenDoc.user);
+    const verifyPhoneNumberTokenDoc = await tokenService.verifyToken(verifyPhoneNumberToken, tokenTypes.VERIFY_EMAIL);
+    const user = await userService.getUserById(verifyPhoneNumberTokenDoc.user);
     if (!user) {
       throw new Error();
     }
     await Token.deleteMany({ user: user.id, type: tokenTypes.VERIFY_EMAIL });
-    await userService.updateUserById(user.id, { isEmailVerified: true });
+    await userService.updateUserById(user.id, { isPhoneNumberVerified: true });
   } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Email verification failed');
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'PhoneNumber verification failed');
   }
 };
 
@@ -95,5 +95,5 @@ module.exports = {
   logout,
   refreshAuth,
   resetPassword,
-  verifyEmail,
+  verifyPhoneNumber,
 };

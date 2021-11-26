@@ -87,13 +87,13 @@ const generateAuthTokens = async (user) => {
 
 /**
  * Generate reset password token
- * @param {string} email
+ * @param {string} PhoneNumber
  * @returns {Promise<string>}
  */
-const generateResetPasswordToken = async (email) => {
-  const user = await userService.getUserByEmail(email);
+const generateResetPasswordToken = async (phoneNumber) => {
+  const user = await userService.getUserByPhoneNumber(PhoneNumber);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'No users found with this email');
+    throw new ApiError(httpStatus.NOT_FOUND, 'No users found with this PhoneNumber');
   }
   const expires = moment().add(config.jwt.resetPasswordExpirationMinutes, 'minutes');
   const resetPasswordToken = generateToken(user.id, expires, tokenTypes.RESET_PASSWORD);
@@ -102,15 +102,15 @@ const generateResetPasswordToken = async (email) => {
 };
 
 /**
- * Generate verify email token
+ * Generate verifyPhoneNumber token
  * @param {User} user
  * @returns {Promise<string>}
  */
-const generateVerifyEmailToken = async (user) => {
-  const expires = moment().add(config.jwt.verifyEmailExpirationMinutes, 'minutes');
-  const verifyEmailToken = generateToken(user.id, expires, tokenTypes.VERIFY_EMAIL);
-  await saveToken(verifyEmailToken, user.id, expires, tokenTypes.VERIFY_EMAIL);
-  return verifyEmailToken;
+const generateVerifyPhoneNumberToken = async (user) => {
+  const expires = moment().add(config.jwt.verifyPhoneNumberExpirationMinutes, 'minutes');
+  const verifyPhoneNumberToken = generateToken(user.id, expires, tokenTypes.VERIFY_EMAIL);
+  await saveToken(verifyPhoneNumberToken, user.id, expires, tokenTypes.VERIFY_EMAIL);
+  return verifyPhoneNumberToken;
 };
 
 module.exports = {
@@ -119,5 +119,5 @@ module.exports = {
   verifyToken,
   generateAuthTokens,
   generateResetPasswordToken,
-  generateVerifyEmailToken,
+  generateVerifyPhoneNumberToken,
 };

@@ -12,23 +12,23 @@ const userSchema = mongoose.Schema(
     },
     phoneNumber: {
       type: String,
-      required: true,
       unique: true,
       trim: true,
       validate(value) {
-        if (!value.match(/[0-9]/)) {
-          throw new Error('Invalid PhoneNumber');
+        if (!value.match(/^\+?\d+$/) || !value.match(/[0-9]/)) {
+          throw new Error('is not a valid phone number!');
         }
       },
     },
+
     password: {
       type: String,
       required: true,
       trim: true,
-      minlength: 8,
+      maxlength: 4,
       validate(value) {
-        if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
-          throw new Error('Password must contain at least one letter and one number');
+        if (!value.match(/\d/) || !value.match(/[0-9]{4}$/)) {
+          throw new Error('Pin number is Incorrect');
         }
       },
       private: true, // used by the toJSON plugin
