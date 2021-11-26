@@ -15,7 +15,7 @@ const userSchema = mongoose.Schema(
       unique: true,
       trim: true,
       validate(value) {
-        if (!value.match(/^\+?\d+$/) || !value.match(/[0-9]/)) {
+        if (!value.match(/^\d+$/) || !value.match(/[0-9]/)) {
           throw new Error('is not a valid phone number!');
         }
       },
