@@ -2,7 +2,7 @@ const { userService } = require('../services');
 
 const getReceiver = async (req, res, next) => {
   const user = await userService.getUserByPhoneNumber(req.params.phoneNumber);
-  if (!user) {
+  if (user) {
     req.phoneNumber = user;
     return next();
   }
