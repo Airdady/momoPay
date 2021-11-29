@@ -1,4 +1,5 @@
 const httpStatus = require('http-status');
+const walletService = require('./wallet.service');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
 
@@ -12,6 +13,16 @@ const createUser = async (userBody) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'PhoneNumber already taken');
   }
   return User.create(userBody);
+};
+
+const createIfNoUser = async (user, amount) => {
+  const newUser = await User.create(user);
+
+
+  console.log('userr', newUser);
+   const wallet = await walletService.createWallet(newUser);
+   console.log("wattii", wallet);
+  return wallet;
 };
 
 /**
@@ -86,4 +97,5 @@ module.exports = {
   getUserByPhoneNumber,
   updateUserById,
   deleteUserById,
+  createIfNoUser,
 };

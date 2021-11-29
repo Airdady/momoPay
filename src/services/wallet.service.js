@@ -28,7 +28,8 @@ const creditWallet = async (data, user) => {
 const createWallet = async (user) => {
   const wallet = new Wallet();
   wallet.user = user;
-  wallet.save();
+  await wallet.save();
+  return wallet;
 };
 
 const debitWallet = async (data, user) => {

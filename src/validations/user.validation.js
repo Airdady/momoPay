@@ -5,7 +5,7 @@ const createUser = {
   body: Joi.object().keys({
     phoneNumber: Joi.string().required(),
     password: Joi.string().required().custom(password),
-    name: Joi.string().required(),
+    name: Joi.string(),
     role: Joi.string().required().valid('user', 'admin', 'agent'),
   }),
 };

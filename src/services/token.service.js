@@ -87,11 +87,11 @@ const generateAuthTokens = async (user) => {
 
 /**
  * Generate reset password token
- * @param {string} PhoneNumber
+ * @param {string} phoneNumber
  * @returns {Promise<string>}
  */
 const generateResetPasswordToken = async (phoneNumber) => {
-  const user = await userService.getUserByPhoneNumber(PhoneNumber);
+  const user = await userService.getUserByPhoneNumber(phoneNumber);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'No users found with this PhoneNumber');
   }
