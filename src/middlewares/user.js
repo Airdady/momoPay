@@ -1,12 +1,19 @@
-const { userService } = require('../services');
+const { userService, walletService } = require('../services');
 
 const getReceiver = async (req, res, next) => {
   const user = await userService.getUserByPhoneNumber(req.params.phoneNumber);
   if (user) {
-    req.phoneNumber = user;
+    req.user = user;
     return next();
   }
-  res.send('Phone number is not in Our system');
+  try {
+    const newUser = await userService.createUser({ phoneNumber: req.params.phoneNumber, password: '0000' });
+     await walletService.createWallet(newUser);
+     req.user = newUser;
+    return next();
+  } catch (error) {
+    return res.send('failed');
+  }
 };
 
 module.exports.getReceiver = getReceiver;
