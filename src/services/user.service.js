@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const walletService = require('./wallet.service');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
+const bcrypt = require('bcryptjs');
 
 /**
  * Create a user
@@ -9,19 +10,19 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<User>}
  */
 const createUser = async (userBody) => {
-  if (await User.isPhoneNumberTaken(userBody.phoneNumber)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'PhoneNumber already taken');
+  const user = await User.isPhoneNumberTaken(userBody.phoneNumber);
+  const userMatch = user && (await bcrypt.compare('0000', user.password));
+  if (userMatch) {
+    user.password = userBody.password;
+    await user.save();
+    return user;
   }
   return User.create(userBody);
 };
 
 const createIfNoUser = async (user, amount) => {
   const newUser = await User.create(user);
-
-
-  console.log('userr', newUser);
-   const wallet = await walletService.createWallet(newUser);
-   console.log("wattii", wallet);
+  const wallet = await walletService.createWallet(newUser);
   return wallet;
 };
 

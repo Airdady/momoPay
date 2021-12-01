@@ -19,7 +19,6 @@ const userSchema = mongoose.Schema(
         }
       },
     },
-
     password: {
       type: String,
       required: true,
@@ -57,9 +56,9 @@ userSchema.plugin(paginate);
  * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
  * @returns {Promise<boolean>}
  */
-userSchema.statics.isPhoneNumberTaken = async function (phoneNumber, excludeUserId) {
-  const user = await this.findOne({ phoneNumber, _id: { $ne: excludeUserId } });
-  return !!user;
+userSchema.statics.isPhoneNumberTaken = async function (phoneNumber) {
+  const user = await this.findOne({ phoneNumber });
+  return user;
 };
 
 /**
