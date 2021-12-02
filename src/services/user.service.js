@@ -1,8 +1,7 @@
 const httpStatus = require('http-status');
-const walletService = require('./wallet.service');
+const bcrypt = require('bcryptjs');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
-const bcrypt = require('bcryptjs');
 
 /**
  * Create a user
@@ -18,12 +17,6 @@ const createUser = async (userBody) => {
     return user;
   }
   return User.create(userBody);
-};
-
-const createIfNoUser = async (user, amount) => {
-  const newUser = await User.create(user);
-  const wallet = await walletService.createWallet(newUser);
-  return wallet;
 };
 
 /**
@@ -98,5 +91,4 @@ module.exports = {
   getUserByPhoneNumber,
   updateUserById,
   deleteUserById,
-  createIfNoUser,
 };

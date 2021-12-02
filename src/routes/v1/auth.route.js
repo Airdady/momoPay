@@ -3,9 +3,11 @@ const validate = require('../../middlewares/validate');
 const authValidation = require('../../validations/auth.validation');
 const authController = require('../../controllers/auth.controller');
 const auth = require('../../middlewares/auth');
-const { checkDefaultPassword } = require('../../middlewares/user');
+const { checkDefaultPassword, checkRegistration } = require('../../middlewares/user');
+
 const router = express.Router();
 
+router.get('/registration/:phoneNumber', checkRegistration);
 router.post('/register', validate(authValidation.register), authController.register);
 router.post('/login', validate(authValidation.login), checkDefaultPassword, authController.login);
 router.post('/logout', validate(authValidation.logout), authController.logout);
