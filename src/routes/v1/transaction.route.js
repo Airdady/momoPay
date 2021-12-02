@@ -4,6 +4,7 @@ const transactionController = require('../../controllers/transaction.controller'
 
 const router = express.Router();
 
+
 router
   .route('/')
   .post(auth('manageUsers'), transactionController.createTransaction)
@@ -13,5 +14,7 @@ router
   .route('/:id')
   .get(auth('manageUsers'), transactionController.viewTransaction)
   .patch(auth('manageUsers'), transactionController.updateTransaction);
+
+  
 
 module.exports = router;

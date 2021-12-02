@@ -8,7 +8,7 @@ const { checkDefaultPassword, checkRegistration } = require('../../middlewares/u
 const router = express.Router();
 
 router.get('/registration/:phoneNumber', checkRegistration);
-router.post('/register', validate(authValidation.register), authController.register);
+router.post('/register', validate(authValidation.register),checkDefaultPassword, authController.register);
 router.post('/login', validate(authValidation.login), checkDefaultPassword, authController.login);
 router.post('/logout', validate(authValidation.logout), authController.logout);
 router.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens);

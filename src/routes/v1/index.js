@@ -18,6 +18,10 @@ const defaultRoutes = [
     route: userRoute,
   },
   {
+    path: '/user',
+    route: userRoute,
+  },
+  {
     path: '/wallet',
     route: walletRoute,
   },
