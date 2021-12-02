@@ -1,4 +1,6 @@
 const Transaction = require('../models/transaction.model');
+const User = require('../models/user.model');
+//const User = require('../models/user.model');
 
 const createTransaction = async (body, user) => {
   const transaction = new Transaction(body);
@@ -19,9 +21,15 @@ const viewTransactions = async (filter, options) => {
   return transaction;
 };
 
-const viewTransaction = async (user, id) => {
-  const transaction = await Transaction.findOne({ user: user.id, id });
+const viewTransaction = async (id) => {
+  const transaction = await Transaction.findById(id);
   return transaction;
+};
+
+const viewTransactionsByUser = async (user) => {
+  const transactions = await Transaction.find({ user: user });
+
+  return transactions;
 };
 
 module.exports = {
@@ -29,4 +37,5 @@ module.exports = {
   createTransaction,
   viewTransactions,
   viewTransaction,
+  viewTransactionsByUser,
 };

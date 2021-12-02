@@ -30,7 +30,7 @@ exports.checkDefaultPassword = (req, res, next) => {
   if (req.body.password === '0000') {
     return res.status(401).send({
       status: 401,
-      message: 'you need to complete registartion before login',
+      message: 'Please register and PIN shouldnot be 0000',
     });
   }
   return next();

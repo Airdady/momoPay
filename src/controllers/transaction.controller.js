@@ -21,13 +21,15 @@ const viewTransactions = catchAsync(async (req, res) => {
 });
 
 const viewTransaction = catchAsync(async (req, res) => {
-  const wallet = await transactionService.viewTransaction(req.user);
+  const wallet = await transactionService.viewTransaction(req.params.id);
   res.send(wallet);
 });
+
 
 module.exports = {
   createTransaction,
   updateTransaction,
   viewTransactions,
   viewTransaction,
+  
 };
