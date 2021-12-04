@@ -16,8 +16,8 @@ const loginUserWithPhoneAndPassword = async (phoneNumber, password) => {
 
   if (!user || !(await user.isPasswordMatch(password))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect PhoneNumber or password');
-  } else if (user.isPhoneNumberVerified === false) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Please Register to verify your phoneNumber');
+  } else if (!user.verified) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Please verify your phoneNumber');
   }
 
   return user;
@@ -88,7 +88,7 @@ const verifyPhoneNumber = async (verifyPhoneNumberToken) => {
       throw new Error();
     }
     await Token.deleteMany({ user: user.id, type: tokenTypes.VERIFY_EMAIL });
-    await userService.updateUserById(user.id, { isPhoneNumberVerified: true });
+    await userService.updateUserById(user.id, { verified: true });
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'PhoneNumber verification failed');
   }

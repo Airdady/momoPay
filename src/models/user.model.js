@@ -36,7 +36,7 @@ const userSchema = mongoose.Schema(
       enum: roles,
       default: 'user',
     },
-    isPhoneNumberVerified: {
+    verified: {
       type: Boolean,
       default: false,
     },

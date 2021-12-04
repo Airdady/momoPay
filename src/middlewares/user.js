@@ -1,5 +1,4 @@
-const bcrypt = require('bcryptjs');
-const { userService, walletService } = require('../services');
+const { userService, walletService, smsService } = require('../services');
 
 const getReceiver = async (req, res, next) => {
   const user = await userService.getUserByPhoneNumber(req.params.phoneNumber);
@@ -20,11 +19,12 @@ const getReceiver = async (req, res, next) => {
 
 exports.checkRegistration = async (req, res) => {
   const user = await userService.getUserByPhoneNumber(req.params.phoneNumber);
-  const userMatch = user && (await bcrypt.compare('0000', user.password));
-  if (!user || userMatch) {
-    return res.status(200).send({ registered: false });
+  if (!user || !user.verified) {
+    await smsService.generateOtp(req.params.phoneNumber);
+    return res.status(200).send({ phoneNumber: req.params.phoneNumber, verified: false });
   }
-  return res.status(200).send({ registered: true });
+  const { verified, phoneNumber } = user;
+  return res.status(200).send({ verified, phoneNumber });
 };
 
 exports.checkDefaultPassword = (req, res, next) => {

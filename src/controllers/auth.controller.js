@@ -1,8 +1,10 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const { authService, userService, tokenService, emailService, walletService } = require('../services');
+const { authService, userService, tokenService, smsService, walletService } = require('../services');
 
 const register = catchAsync(async (req, res) => {
+  const sms = await smsService.generateOtp(req.body.phoneNumber);
+  console.log('sms', sms);
   const user = await userService.createUser(req.body);
   const tokens = await tokenService.generateAuthTokens(user);
   await walletService.createWallet(user);
@@ -28,7 +30,7 @@ const refreshTokens = catchAsync(async (req, res) => {
 
 const forgotPassword = catchAsync(async (req, res) => {
   const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
-  await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
+  await smsService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
@@ -37,15 +39,18 @@ const resetPassword = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
-const sendVerificationEmail = catchAsync(async (req, res) => {
-  const verifyEmailToken = await tokenService.generateVerifyPhoneNumberToken(req.user);
-  await emailService.sendVerificationEmail(req.user.email, verifyEmailToken);
+const sendVerification = catchAsync(async (req, res) => {
+  await smsService.generateOtp(req.user.phoneNumber);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
-const verifyEmail = catchAsync(async (req, res) => {
-  await authService.verifyPhoneNumber(req.query.token);
-  res.status(httpStatus.NO_CONTENT).send();
+const verifyPhoneNumber = catchAsync(async (req, res) => {
+  const sms = await smsService.verifyCode(req.params.phoneNumber, req.params.code);
+  if (sms.data.status === 200) {
+    await userService.verifyUser(req.params.phoneNumber);
+    return res.send({ status: 200, message: 'verification successful' });
+  }
+  return res.send({ status: 400, message: 'verification failed' });
 });
 
 module.exports = {
@@ -55,6 +60,6 @@ module.exports = {
   refreshTokens,
   forgotPassword,
   resetPassword,
-  sendVerificationEmail,
-  verifyEmail,
+  sendVerification,
+  verifyPhoneNumber,
 };

@@ -84,6 +84,11 @@ const deleteUserById = async (userId) => {
   return user;
 };
 
+const verifyUser = async (phoneNumber) => {
+  const user = User.updateOne({ phoneNumber }, { verified: true });
+  return user;
+};
+
 module.exports = {
   createUser,
   queryUsers,
@@ -91,4 +96,5 @@ module.exports = {
   getUserByPhoneNumber,
   updateUserById,
   deleteUserById,
+  verifyUser,
 };
