@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const { userService, walletService } = require('../services');
+const User = require('../models/user.model')
 
 const getReceiver = async (req, res, next) => {
   const user = await userService.getUserByPhoneNumber(req.params.phoneNumber);
@@ -24,16 +25,6 @@ exports.checkRegistration = async (req, res) => {
     return res.status(200).send({ registered: false });
   }
   return res.status(200).send({ registered: true });
-};
-
-exports.checkDefaultPassword = (req, res, next) => {
-  if (req.body.password === '0000') {
-    return res.status(401).send({
-      status: 401,
-      message: 'Please register and PIN shouldnot be 0000',
-    });
-  }
-  return next();
 };
 
 module.exports.getReceiver = getReceiver;
