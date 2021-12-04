@@ -1,12 +1,9 @@
+const { json } = require('express');
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 
 const transactionSchema = mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
     amount: {
       type: Number,
       required: true,
@@ -34,15 +31,12 @@ const transactionSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    paymentType: {
-      type: String,
-      required: true,
-    },
     reference: {
       type: String,
       required: true,
     },
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    sender: { type: Object, required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   },
   {
     timestamps: true,

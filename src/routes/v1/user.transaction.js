@@ -5,8 +5,6 @@ const userController = require('../../controllers/user.controller');
 const router = express.Router();
 router.route('/transactions').get(auth('manageUsers'), userController.viewTransactionsByUser);
 
-
-
 module.exports = router;
 
 /**

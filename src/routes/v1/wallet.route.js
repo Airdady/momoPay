@@ -9,7 +9,6 @@ const router = express.Router();
 
 router
   .route('/')
-
   .get(auth('manageUsers'), walletController.viewWallet)
   .patch(auth('manageUsers'), walletController.debitWallet);
 

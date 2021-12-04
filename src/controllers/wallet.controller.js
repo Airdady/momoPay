@@ -3,7 +3,7 @@ const catchAsync = require('../utils/catchAsync');
 const walletService = require('../services/wallet.service');
 
 const creditWallet = catchAsync(async (req, res) => {
-  const wallet = await walletService.creditWallet(req.body, req.user,req.walletId);
+  const wallet = await walletService.creditWallet(req.body, req.receiver);
   res.status(httpStatus.CREATED).send(wallet);
 });
 

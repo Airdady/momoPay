@@ -4,7 +4,8 @@ const { userService, walletService } = require('../services');
 const getReceiver = async (req, res, next) => {
   const user = await userService.getUserByPhoneNumber(req.params.phoneNumber);
   if (user) {
-    req.user = user;
+    req.receiver = user;
+    req.body.sender = req.user;
     return next();
   }
   try {

@@ -25,11 +25,9 @@ const viewTransaction = catchAsync(async (req, res) => {
   res.send(wallet);
 });
 
-
 module.exports = {
   createTransaction,
   updateTransaction,
   viewTransactions,
   viewTransaction,
-  
 };
