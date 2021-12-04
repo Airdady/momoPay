@@ -33,7 +33,8 @@ const createWallet = async (user) => {
 };
 
 const debitWallet = async (data, user) => {
-  const wallet = await Wallet.findOne({ user: user.id });
+  const wallet = await Wallet.findOne({ user: user._id });
+  console.log({ user: user._id });
   const balanceBefore = wallet.balance;
   wallet.balance -= data.amount;
   wallet.save();

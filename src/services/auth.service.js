@@ -13,9 +13,13 @@ const { tokenTypes } = require('../config/tokens');
  */
 const loginUserWithPhoneAndPassword = async (phoneNumber, password) => {
   const user = await userService.getUserByPhoneNumber(phoneNumber);
+
   if (!user || !(await user.isPasswordMatch(password))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect PhoneNumber or password');
+  } else if (user.isPhoneNumberVerified === false) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Please Register to verify your phoneNumber');
   }
+
   return user;
 };
 
