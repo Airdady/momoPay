@@ -26,7 +26,6 @@ const getUser = catchAsync(async (req, res) => {
 
 const viewTransactionsByUser = catchAsync(async (req, res) => {
   const transactions = await transactionService.viewTransactionsByUser(req.user);
-
   res.send({ data: transactions });
 });
 

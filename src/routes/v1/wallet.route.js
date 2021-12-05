@@ -12,8 +12,9 @@ router
   .get(auth('manageUsers'), walletController.viewWallet)
   .patch(auth('manageUsers'), walletController.debitWallet);
 
-router.route('/:phoneNumber').post(auth('manageUsers'), getReceiver, walletController.creditWallet);
+// router.route('/:phoneNumber').post(auth('manageUsers'), getReceiver, walletController.creditWallet);
 
-router.route('/send_credit').post(auth('manageUsers'), getReceiver, walletController.sendCredit);
+router.route('/deposit_money').post(auth('manageUsers'), getReceiver, walletController.sendCredit);
+router.route('/deposit_money').post(auth('manageUsers'), getReceiver, walletController.sendCredit);
 
 module.exports = router;

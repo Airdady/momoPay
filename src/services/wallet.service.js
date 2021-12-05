@@ -1,9 +1,29 @@
 const Wallet = require('../models/wallet.model');
 const transactionService = require('./transaction.service');
 
+const debitWallet = async (data, user) => {
+  const wallet = await Wallet.findOne({ user: data.sender });
+  const balanceBefore = wallet.balance;
+  wallet.balance -= data.amount;
+  wallet.save();
+  const balanceAfter = wallet.balance;
+  const userTransaction = {
+    amount: data.amount,
+    balanceBefore,
+    balanceAfter,
+    status: 'COMPLETE',
+    fees: 0,
+    type: 'debit',
+    sender: { phoneNumber: data.sender.phoneNumber },
+    receiver: { phoneNumber: user.phoneNumber },
+    reference: Math.random().toString().slice(4, 14),
+  };
+  const transaction = await transactionService.createTransaction(userTransaction, data.sender);
+  return { wallet, transaction };
+};
+
 const creditWallet = async (data, user) => {
   const wallet = await Wallet.findOne({ user });
-  const { phoneNumber } = data.sender;
   const balanceBefore = wallet.balance;
   wallet.balance += data.amount;
   wallet.save();
@@ -14,15 +34,19 @@ const creditWallet = async (data, user) => {
     balanceAfter,
     status: 'COMPLETE',
     fees: 0,
-    type: 'deposit',
-    sender: { phoneNumber },
+    type: 'credit',
+    sender: { phoneNumber: data.sender.phoneNumber },
+    receiver: { phoneNumber: user.phoneNumber },
     reference: Math.random().toString().slice(4, 14),
   };
   const transaction = await transactionService.createTransaction(userTransaction, user);
-  return {
-    wallet,
-    transaction,
-  };
+  return { wallet, transaction };
+};
+
+const sendMoney = async (data, receiver) => {
+  await creditWallet(data, receiver);
+  await debitWallet(data, receiver);
+  return { success: true };
 };
 
 const createWallet = async (user) => {
@@ -32,34 +56,13 @@ const createWallet = async (user) => {
   return wallet;
 };
 
-const debitWallet = async (data, user) => {
-  const wallet = await Wallet.findOne({ user: user._id });
-  const balanceBefore = wallet.balance;
-  wallet.balance -= data.amount;
-  wallet.save();
-  const balanceAfter = wallet.balance;
-  const userTransaction = {
-    name: 'cash withdraw',
-    amount: data.amount,
-    balanceBefore,
-    balanceAfter,
-    status: 'COMPLETE',
-    fees: 0,
-    paymentType: 'debit wallet',
-    type: 'withdraw',
-    reference: Math.random().toString().slice(4, 14),
-  };
-  const transaction = await transactionService.createTransaction(userTransaction, user);
-  return { wallet, transaction };
-};
-
 const viewWallet = async (user) => {
   const wallet = await Wallet.findOne({ user: user.id });
   return wallet;
 };
 
 module.exports = {
-  creditWallet,
+  sendMoney,
   createWallet,
   debitWallet,
   viewWallet,

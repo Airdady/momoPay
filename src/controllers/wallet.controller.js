@@ -2,8 +2,8 @@ const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const walletService = require('../services/wallet.service');
 
-const creditWallet = catchAsync(async (req, res) => {
-  const wallet = await walletService.creditWallet(req.body, req.receiver);
+const sendMoney = catchAsync(async (req, res) => {
+  const wallet = await walletService.sendMoney(req.body, req.receiver);
   res.status(httpStatus.CREATED).send(wallet);
 });
 
@@ -24,7 +24,7 @@ const sendCredit = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-  creditWallet,
+  sendMoney,
   viewWallet,
   debitWallet,
   sendCredit,

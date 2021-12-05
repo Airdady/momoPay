@@ -35,6 +35,7 @@ const transactionSchema = mongoose.Schema(
       required: true,
     },
     sender: { type: Object, required: true },
+    receiver: { type: Object, required: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   },
   {
