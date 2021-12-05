@@ -51,7 +51,7 @@ const verifyPhoneNumber = catchAsync(async (req, res) => {
       return res.send({ status: 200, message: 'verification successful' });
     }
   } catch (error) {
-    return res.send({ status: 400, message: 'verification failed' });
+    return res.status(400).send({ status: 400, message: 'verification failed', stack: error.stack });
   }
 });
 

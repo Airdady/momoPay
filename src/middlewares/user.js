@@ -19,7 +19,7 @@ const getReceiver = async (req, res, next) => {
 
 exports.checkRegistration = async (req, res) => {
   const user = await userService.getUserByPhoneNumber(req.params.phoneNumber);
-  if (!user || !user.verified) {
+  if (!user || (user && !user.verified)) {
     const response = await smsService.generateOtp(req.params.phoneNumber);
     console.log(response.data);
     return res.status(200).send({ phoneNumber: req.params.phoneNumber, verified: false });
