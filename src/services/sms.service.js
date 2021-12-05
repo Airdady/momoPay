@@ -9,11 +9,11 @@ const OtpRouter = axios.create({
 });
 
 const generateOtp = (phoneNumber) => {
-  return OtpRouter.post(`/generate/${phoneNumber}?keys=61abe2a6f0d6565254669389`);
+  return OtpRouter.post(`/generate/${phoneNumber}?keys=61ac32638ec943b8eae71201`);
 };
 
 const verifyCode = (phoneNumber, code) => {
-  return OtpRouter.post(`/verify/${phoneNumber}/${code}?keys=61abe2a6f0d6565254669389`);
+  return OtpRouter.post(`/verify/${phoneNumber}/${code}?keys=61ac32638ec943b8eae71201`);
 };
 
 module.exports = { generateOtp, verifyCode };
