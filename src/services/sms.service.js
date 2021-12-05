@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 const OtpRouter = axios.create({
-  baseURL: 'http://localhost:5000/otp',
+  baseURL: 'https://otp.airdady.com/otp',
   headers: {
     'Content-Type': 'application/json',
     accept: 'application/json',
