@@ -6,7 +6,7 @@ const { checkRegistration } = require('../../middlewares/user');
 
 const router = express.Router();
 
-router.get('/send-verification/:phoneNumber', checkRegistration);
+router.post('/send-verification/:phoneNumber', checkRegistration);
 router.post('/register', validate(authValidation.register), authController.register);
 router.post('/login', validate(authValidation.login), authController.login);
 router.post('/logout', validate(authValidation.logout), authController.logout);

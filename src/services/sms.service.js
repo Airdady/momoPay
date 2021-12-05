@@ -1,7 +1,9 @@
 const axios = require('axios');
 
+const otpKeys = `${process.env.OTP_KEYS || '61ac6ec633314e5fd1b6f614'}`;
+
 const OtpRouter = axios.create({
-  baseURL: 'https://otp.airdady.com/otp',
+  baseURL: `${process.env.USEND_API || 'http://localhost:5000'}/otp`,
   headers: {
     'Content-Type': 'application/json',
     accept: 'application/json',
@@ -10,7 +12,7 @@ const OtpRouter = axios.create({
 
 const generateOtp = (phoneNumber) => {
   try {
-    const response = OtpRouter.post(`/generate/${phoneNumber}?keys=61ac32638ec943b8eae71201`);
+    const response = OtpRouter.post(`/generate/${phoneNumber}?keys=${otpKeys}`);
     return response;
   } catch (error) {
     return error.response;
@@ -18,7 +20,12 @@ const generateOtp = (phoneNumber) => {
 };
 
 const verifyCode = (phoneNumber, code) => {
-  return OtpRouter.post(`/verify/${phoneNumber}/${code}?keys=61ac32638ec943b8eae71201`);
+  try {
+    const response = OtpRouter.post(`/verify/${phoneNumber}/${code}?keys=${otpKeys}`);
+    return response;
+  } catch (error) {
+    return error.response;
+  }
 };
 
 module.exports = { generateOtp, verifyCode };

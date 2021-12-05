@@ -44,12 +44,15 @@ const sendVerification = catchAsync(async (req, res) => {
 });
 
 const verifyPhoneNumber = catchAsync(async (req, res) => {
-  const sms = await smsService.verifyCode(req.params.phoneNumber, req.params.code);
-  if (sms.data.status === 200) {
-    await userService.verifyUser(req.params.phoneNumber);
-    return res.send({ status: 200, message: 'verification successful' });
+  try {
+    const sms = await smsService.verifyCode(req.params.phoneNumber, req.params.code);
+    if (sms.data.status === 200) {
+      await userService.verifyUser(req.params.phoneNumber);
+      return res.send({ status: 200, message: 'verification successful' });
+    }
+  } catch (error) {
+    return res.send({ status: 400, message: 'verification failed' });
   }
-  return res.send({ status: 400, message: 'verification failed' });
 });
 
 module.exports = {
