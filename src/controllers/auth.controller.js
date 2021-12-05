@@ -3,12 +3,11 @@ const catchAsync = require('../utils/catchAsync');
 const { authService, userService, tokenService, smsService, walletService } = require('../services');
 
 const register = catchAsync(async (req, res) => {
-  const sms = await smsService.generateOtp(req.body.phoneNumber);
-  console.log('sms', sms);
   const user = await userService.createUser(req.body);
   const tokens = await tokenService.generateAuthTokens(user);
   await walletService.createWallet(user);
-  res.status(httpStatus.CREATED).send({ user, tokens });
+  const sms = await smsService.generateOtp(req.body.phoneNumber);
+  res.status(httpStatus.CREATED).send({ user, tokens, sms });
 });
 
 const login = catchAsync(async (req, res) => {

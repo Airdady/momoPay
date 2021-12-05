@@ -9,7 +9,12 @@ const OtpRouter = axios.create({
 });
 
 const generateOtp = (phoneNumber) => {
-  return OtpRouter.post(`/generate/${phoneNumber}?keys=61ac32638ec943b8eae71201`);
+  try {
+    const response = OtpRouter.post(`/generate/${phoneNumber}?keys=61ac32638ec943b8eae71201`);
+    return response;
+  } catch (error) {
+    return error.response;
+  }
 };
 
 const verifyCode = (phoneNumber, code) => {
