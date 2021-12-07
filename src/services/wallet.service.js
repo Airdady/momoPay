@@ -4,7 +4,7 @@ const transactionService = require('./transaction.service');
 const debitWallet = async (data, user) => {
   const wallet = await Wallet.findOne({ user: data.sender });
   const balanceBefore = wallet.balance;
-  wallet.balance -= data.amount;
+  wallet.balance -= data.amount && parseInt(data.amount, 10);
   wallet.save();
   const balanceAfter = wallet.balance;
   const userTransaction = {
@@ -13,7 +13,7 @@ const debitWallet = async (data, user) => {
     balanceAfter,
     status: 'COMPLETE',
     fees: 0,
-    type: 'debit',
+    type: 'SENT',
     sender: { phoneNumber: data.sender.phoneNumber },
     receiver: { phoneNumber: user.phoneNumber },
     reference: Math.random().toString().slice(4, 14),
@@ -25,7 +25,7 @@ const debitWallet = async (data, user) => {
 const creditWallet = async (data, user) => {
   const wallet = await Wallet.findOne({ user });
   const balanceBefore = wallet.balance;
-  wallet.balance += data.amount;
+  wallet.balance += data.amount && parseInt(data.amount, 10);
   wallet.save();
   const balanceAfter = wallet.balance;
   const userTransaction = {
@@ -34,7 +34,7 @@ const creditWallet = async (data, user) => {
     balanceAfter,
     status: 'COMPLETE',
     fees: 0,
-    type: 'credit',
+    type: 'RECEIVED',
     sender: { phoneNumber: data.sender.phoneNumber },
     receiver: { phoneNumber: user.phoneNumber },
     reference: Math.random().toString().slice(4, 14),

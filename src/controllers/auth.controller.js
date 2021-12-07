@@ -6,8 +6,10 @@ const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
   const tokens = await tokenService.generateAuthTokens(user);
   await walletService.createWallet(user);
-  const sms = await smsService.generateOtp(req.body.phoneNumber);
-  res.status(httpStatus.CREATED).send({ user, tokens, sms });
+  const { data } = await smsService.generateOtp(req.body.phoneNumber);
+  res
+    .status(httpStatus.CREATED)
+    .send({ status: 201, message: `verification code sent to ${req.body.phoneNumber}`, user, tokens, code: data.code });
 });
 
 const login = catchAsync(async (req, res) => {

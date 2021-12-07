@@ -1,6 +1,6 @@
 const { userService, walletService, smsService } = require('../services');
 
-const getReceiver = async (req, res, next) => {
+exports.getReceiver = async (req, res, next) => {
   const user = await userService.getUserByPhoneNumber(req.params.phoneNumber);
   req.body.sender = req.user;
   if (user) {
@@ -15,6 +15,20 @@ const getReceiver = async (req, res, next) => {
   } catch (error) {
     return res.send('failed');
   }
+};
+
+exports.checkDuplicateSend = async (req, res, next) => {
+  if (req.body.sender.phoneNumber === req.receiver.phoneNumber) {
+    return res.status(400).send({ status: 400, message: 'transaction fobbiden' });
+  }
+  return next();
+};
+
+exports.checkAmountLimit = async (req, res, next) => {
+  if (req.body.amount > 2000000) {
+    return res.status(400).send({ status: 400, message: 'credit limit exceeded maximum is 7M' });
+  }
+  return next();
 };
 
 exports.checkRegistration = async (req, res) => {
@@ -37,5 +51,3 @@ exports.checkDefaultPassword = (req, res, next) => {
   }
   return next();
 };
-
-module.exports.getReceiver = getReceiver;

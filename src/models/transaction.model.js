@@ -6,6 +6,7 @@ const transactionSchema = mongoose.Schema(
     amount: {
       type: Number,
       required: true,
+      max: 2000000,
       default: 0,
     },
     balanceBefore: {

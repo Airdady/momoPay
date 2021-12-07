@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
-const bcrypt = require('bcryptjs');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
+const { getNamesByNumber } = require('./phone.service');
 
 /**
  * Create a user
@@ -9,14 +9,10 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<User>}
  */
 const createUser = async (userBody) => {
-  const user = await User.isPhoneNumberTaken(userBody.phoneNumber);
-  const userMatch = user && (await bcrypt.compare('0000', user.password));
-  if (userMatch) {
-    user.password = userBody.password;
-    await user.save();
-    return user;
-  }
-  return User.create(userBody);
+  const name = await getNamesByNumber(userBody.phoneNumber);
+  const user = new User({ ...userBody, name });
+  await user.save();
+  return user;
 };
 
 /**
