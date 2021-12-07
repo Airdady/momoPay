@@ -15,6 +15,5 @@ router
 // router.route('/:phoneNumber').post(auth('manageUsers'), getReceiver, walletController.creditWallet);
 
 router.route('/deposit_money').post(auth('manageUsers'), getReceiver, walletController.sendCredit);
-router.route('/deposit_money').post(auth('manageUsers'), getReceiver, walletController.sendCredit);
 
 module.exports = router;
