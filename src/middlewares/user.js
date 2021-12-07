@@ -1,3 +1,5 @@
+const Transaction = require('../models/transaction.model');
+const Wallet = require('../models/wallet.model');
 const { userService, walletService, smsService } = require('../services');
 
 exports.getReceiver = async (req, res, next) => {
@@ -20,6 +22,15 @@ exports.getReceiver = async (req, res, next) => {
 exports.checkDuplicateSend = async (req, res, next) => {
   if (req.body.sender.phoneNumber === req.receiver.phoneNumber) {
     return res.status(400).send({ status: 400, message: 'transaction fobbiden' });
+  }
+  return next();
+};
+
+exports.accountBalance = async (req, res, next) => {
+  const { amount } = req.body;
+  const wallet = await Wallet.findOne({ user: req.user });
+  if (wallet.balance < amount) {
+    return res.send({ status: 404, messege: 'insufficient account' });
   }
   return next();
 };

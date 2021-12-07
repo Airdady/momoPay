@@ -66,4 +66,5 @@ module.exports = {
   createWallet,
   debitWallet,
   viewWallet,
+  creditWallet,
 };

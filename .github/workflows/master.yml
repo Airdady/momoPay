@@ -14,7 +14,7 @@ jobs:
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@4.2.0
       with:
-        server: ftp.server266.web-hosting.com
+        server: server266.web-hosting.com
         username: doolxdjm
-        password: AQr6dZqoe5Tu
+        password: ${{ secrets.ftp_password }}
         server-dir: /airdady.com/api.usend

@@ -10,6 +10,7 @@ const register = catchAsync(async (req, res) => {
   res
     .status(httpStatus.CREATED)
     .send({ status: 201, message: `verification code sent to ${req.body.phoneNumber}`, user, tokens, code: data.code });
+  res.status(httpStatus.CREATED).send({ user, tokens });
 });
 
 const login = catchAsync(async (req, res) => {
@@ -42,7 +43,7 @@ const resetPassword = catchAsync(async (req, res) => {
 
 const sendVerification = catchAsync(async (req, res) => {
   await smsService.generateOtp(req.user.phoneNumber);
-  res.status(httpStatus.NO_CONTENT).send();
+  return res.status(httpStatus.NO_CONTENT).send();
 });
 
 const verifyPhoneNumber = catchAsync(async (req, res) => {
