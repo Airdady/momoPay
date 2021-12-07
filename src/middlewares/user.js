@@ -1,3 +1,5 @@
+const Transaction = require('../models/transaction.model');
+const Wallet = require('../models/wallet.model');
 const { userService, walletService, smsService } = require('../services');
 
 const getReceiver = async (req, res, next) => {
@@ -15,6 +17,15 @@ const getReceiver = async (req, res, next) => {
   } catch (error) {
     return res.send('failed');
   }
+};
+
+exports.accountBalance = async (req, res, next) => {
+  const { amount } = req.body;
+  const wallet = await Wallet.findOne({ user: req.user });
+  if (wallet.balance < amount) {
+    return res.send({ status: 404, messege: 'insufficient account' });
+  }
+  return next();
 };
 
 exports.checkRegistration = async (req, res) => {

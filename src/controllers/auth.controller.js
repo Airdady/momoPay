@@ -6,8 +6,7 @@ const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
   const tokens = await tokenService.generateAuthTokens(user);
   await walletService.createWallet(user);
-  const sms = await smsService.generateOtp(req.body.phoneNumber);
-  res.status(httpStatus.CREATED).send({ user, tokens, sms });
+  res.status(httpStatus.CREATED).send({ user, tokens });
 });
 
 const login = catchAsync(async (req, res) => {
@@ -40,7 +39,7 @@ const resetPassword = catchAsync(async (req, res) => {
 
 const sendVerification = catchAsync(async (req, res) => {
   await smsService.generateOtp(req.user.phoneNumber);
-  res.status(httpStatus.NO_CONTENT).send();
+  return res.status(httpStatus.NO_CONTENT).send();
 });
 
 const verifyPhoneNumber = catchAsync(async (req, res) => {
