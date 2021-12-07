@@ -17,4 +17,4 @@ jobs:
         server: server266.web-hosting.com
         username: doolxdjm
         password: ${{ secrets.ftp_password }}
-        server-dir: /airdady.com/api.usend
+        server-dir: /airdady.com/api.usend/
