@@ -14,8 +14,8 @@ const debitWallet = async (data, user) => {
     status: 'COMPLETE',
     fees: 0,
     type: 'SENT',
-    sender: { phoneNumber: data.sender.phoneNumber },
-    receiver: { phoneNumber: user.phoneNumber },
+    sender: { phoneNumber: data.sender.phoneNumber, name: data.sender.name },
+    receiver: { phoneNumber: user.phoneNumber, name: user.name },
     reference: Math.random().toString().slice(4, 14),
   };
   const transaction = await transactionService.createTransaction(userTransaction, data.sender);
@@ -35,8 +35,8 @@ const creditWallet = async (data, user) => {
     status: 'COMPLETE',
     fees: 0,
     type: 'RECEIVED',
-    sender: { phoneNumber: data.sender.phoneNumber },
-    receiver: { phoneNumber: user.phoneNumber },
+    sender: { phoneNumber: data.sender.phoneNumber, name: data.sender.name },
+    receiver: { phoneNumber: user.phoneNumber, name: user.name },
     reference: Math.random().toString().slice(4, 14),
   };
   const transaction = await transactionService.createTransaction(userTransaction, user);
