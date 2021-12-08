@@ -3,6 +3,7 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { userService, transactionService } = require('../services');
+const { getNamesByNumber } = require('../services/phone.service');
 
 const createUser = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -39,6 +40,14 @@ const deleteUser = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const validatePhoneNumber = async (req, res) => {
+  const name = await getNamesByNumber(req.params.phoneNumber);
+  if (name) {
+    return res.status(200).send({ status: 200, data: { name, phoneNumber: req.params.phoneNumber } });
+  }
+  return res.status(200).send({ status: 400, message: 'phone number validation failed' });
+};
+
 module.exports = {
   createUser,
   getUsers,
@@ -46,4 +55,5 @@ module.exports = {
   viewTransactionsByUser,
   updateUser,
   deleteUser,
+  validatePhoneNumber,
 };

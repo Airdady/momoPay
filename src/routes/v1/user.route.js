@@ -18,6 +18,8 @@ router
   .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
+router.route('/phone/:phoneNumber').get(auth('getUsers'), userController.validatePhoneNumber);
+
 module.exports = router;
 
 /**
