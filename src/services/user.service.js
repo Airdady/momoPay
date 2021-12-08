@@ -19,6 +19,18 @@ const createUser = async (userBody) => {
   return User.create(userBody);
 };
 
+const updatePin = async (userPin) => {
+  const password = req.user;
+  const user = await User.password(userPin.phoneNumber);
+  const cryptPin = user && (await bcrypt.compare(password, user.password));
+  if (cryptPin) {
+    user.password = userPin.password;
+    await user.save();
+    return user;
+  }
+  return User.create(userPin);
+};
+
 /**
  * Query for users
  * @param {Object} filter - Mongo filter
@@ -97,4 +109,5 @@ module.exports = {
   updateUserById,
   deleteUserById,
   verifyUser,
+  updatePin,
 };
