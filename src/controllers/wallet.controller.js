@@ -4,7 +4,7 @@ const walletService = require('../services/wallet.service');
 
 const sendMoney = catchAsync(async (req, res) => {
   const wallet = await walletService.sendMoney(req.body, req.receiver);
-  res.status(httpStatus.CREATED).send(wallet);
+  res.status(httpStatus.CREATED).send({ status: httpStatus.CREATED, data: wallet });
 });
 
 const viewWallet = catchAsync(async (req, res) => {

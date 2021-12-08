@@ -1,7 +1,7 @@
 const Wallet = require('../models/wallet.model');
 const transactionService = require('./transaction.service');
 
-const debitWallet = async (data, user) => {
+const debitWallet = async (data, user, transactionId) => {
   const wallet = await Wallet.findOne({ user: data.sender });
   const balanceBefore = wallet.balance;
   wallet.balance -= data.amount && parseInt(data.amount, 10);
@@ -16,13 +16,13 @@ const debitWallet = async (data, user) => {
     type: 'SENT',
     sender: { phoneNumber: data.sender.phoneNumber, name: data.sender.name },
     receiver: { phoneNumber: user.phoneNumber, name: user.name },
-    reference: Math.random().toString().slice(4, 14),
+    reference: transactionId,
   };
   const transaction = await transactionService.createTransaction(userTransaction, data.sender);
   return { wallet, transaction };
 };
 
-const creditWallet = async (data, user) => {
+const creditWallet = async (data, user, transactionId) => {
   const wallet = await Wallet.findOne({ user });
   const balanceBefore = wallet.balance;
   wallet.balance += data.amount && parseInt(data.amount, 10);
@@ -37,16 +37,17 @@ const creditWallet = async (data, user) => {
     type: 'RECEIVED',
     sender: { phoneNumber: data.sender.phoneNumber, name: data.sender.name },
     receiver: { phoneNumber: user.phoneNumber, name: user.name },
-    reference: Math.random().toString().slice(4, 14),
+    reference: transactionId,
   };
   const transaction = await transactionService.createTransaction(userTransaction, user);
   return { wallet, transaction };
 };
 
 const sendMoney = async (data, receiver) => {
-  await creditWallet(data, receiver);
-  await debitWallet(data, receiver);
-  return { success: true };
+  const transactionId = Math.random().toString().slice(4, 14);
+  await creditWallet(data, receiver, transactionId);
+  await debitWallet(data, receiver, transactionId);
+  return { success: true, transactionId, receiver };
 };
 
 const createWallet = async (user) => {
