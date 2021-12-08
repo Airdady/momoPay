@@ -42,27 +42,6 @@ const sendVerification = catchAsync(async (req, res) => {
   return res.status(httpStatus.NO_CONTENT).send();
 });
 
-const userToResetPin = catchAsync(async (req, res) => {
-  const user = await userService.getUserByPhoneNumber(req.params.phoneNumber,req.body);
-  console.log(req.params.phoneNumber);
-  await userService.updatePin(req.body)
-  return res.send({ status: 200, message: 'sucessfully updated your PIN',user });
-
-  
-});
-
-// const verifyPin = catchAsync(async (req, res) => {
-//   try {
-//     const sms = await smsService.verifyCode(req.params.phoneNumber, req.params.code);
-//     if (sms.data.status === 200) {
-//       await userService.verifyUser(req.params.phoneNumber);
-//       return res.send({ status: 200, message: 'verification successful please reset your Pin' });
-//     }
-//   } catch (error) {
-//     return res.status(400).send({ status: 400, message: 'verification failed', stack: error.stack });
-//   }
-// });
-
 const verifyPhoneNumber = catchAsync(async (req, res) => {
   try {
     const sms = await smsService.verifyCode(req.params.phoneNumber, req.params.code);
@@ -84,6 +63,4 @@ module.exports = {
   resetPassword,
   sendVerification,
   verifyPhoneNumber,
-  //verifyPin,
-  userToResetPin,
 };
