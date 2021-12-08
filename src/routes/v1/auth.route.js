@@ -2,7 +2,7 @@ const express = require('express');
 const validate = require('../../middlewares/validate');
 const authValidation = require('../../validations/auth.validation');
 const authController = require('../../controllers/auth.controller');
-const { checkRegistration } = require('../../middlewares/user');
+const { checkRegistration, sendResetPin, updatePin } = require('../../middlewares/user');
 
 const router = express.Router();
 
@@ -14,6 +14,11 @@ router.post('/refresh-tokens', validate(authValidation.refreshTokens), authContr
 router.post('/forgot-password', validate(authValidation.forgotPassword), authController.forgotPassword);
 router.post('/reset-password', validate(authValidation.resetPassword), authController.resetPassword);
 router.post('/verify/:phoneNumber/:code', authController.verifyPhoneNumber);
+router.post('/send-resetcode/:phoneNumber', sendResetPin);
+//router.post('/verify-pin/:phoneNumber:code', authController.verifyPin)
+//router.post('/reset-pin/:phoneNumber', authController.userToResetPin)
+router.post('/reset-pin/:phoneNumber/:code',updatePin)
+
 
 module.exports = router;
 
