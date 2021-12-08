@@ -48,10 +48,10 @@ exports.checkRegistration = async (req, res) => {
   const user = await userService.getUserByPhoneNumber(req.params.phoneNumber);
   const response = await smsService.generateOtp(req.params.phoneNumber);
   if (!user || (user && !user.verified)) {
-    return res.status(200).send({ phoneNumber: req.params.phoneNumber, verified: false, sms: response.data });
+    return res.status(200).send({ phoneNumber: req.params.phoneNumber, verified: false, code: response.data.data.code });
   }
   const { verified, phoneNumber } = user;
-  return res.status(200).send({ verified, phoneNumber, sms: response.data });
+  return res.status(200).send({ verified, phoneNumber, code: response.data.data.code });
 };
 
 exports.sendResetPin = async (req, res) => {
