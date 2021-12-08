@@ -44,13 +44,12 @@ exports.checkAmountLimit = async (req, res, next) => {
 
 exports.checkRegistration = async (req, res) => {
   const user = await userService.getUserByPhoneNumber(req.params.phoneNumber);
+  const response = await smsService.generateOtp(req.params.phoneNumber);
   if (!user || (user && !user.verified)) {
-    const response = await smsService.generateOtp(req.params.phoneNumber);
-    console.log(response.data);
-    return res.status(200).send({ phoneNumber: req.params.phoneNumber, verified: false });
+    return res.status(200).send({ phoneNumber: req.params.phoneNumber, verified: false, sms: response.data });
   }
   const { verified, phoneNumber } = user;
-  return res.status(200).send({ verified, phoneNumber });
+  return res.status(200).send({ verified, phoneNumber, sms: response.data });
 };
 
 exports.checkDefaultPassword = (req, res, next) => {
