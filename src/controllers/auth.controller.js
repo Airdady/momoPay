@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const { authService, userService, tokenService, smsService, walletService } = require('../services');
+const passport = require('passport');
 
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -17,7 +18,12 @@ const login = catchAsync(async (req, res) => {
   const { phoneNumber, password } = req.body;
   const user = await authService.loginUserWithPhoneAndPassword(phoneNumber, password);
   const tokens = await tokenService.generateAuthTokens(user);
-  res.send({ user, tokens });
+  return res.send({ user, tokens });
+});
+
+const updateAndResetPin = catchAsync(async (req, res) => {
+  const user = await userService.updatePin(req.params.phoneNumber, req.body.password);
+  return res.status(200).send({ status: 200, message: 'You have successifully reset your PIN', user });
 });
 
 const logout = catchAsync(async (req, res) => {
@@ -67,4 +73,5 @@ module.exports = {
   resetPassword,
   sendVerification,
   verifyPhoneNumber,
+  updateAndResetPin,
 };
