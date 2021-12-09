@@ -1,8 +1,6 @@
-const Transaction = require('../models/transaction.model');
 const Wallet = require('../models/wallet.model');
 const bcrypt = require('bcryptjs');
 const { userService, walletService, smsService } = require('../services');
-const User = require('../models/user.model');
 
 exports.getReceiver = async (req, res, next) => {
   const user = await userService.getUserByPhoneNumber(req.params.phoneNumber);
@@ -36,6 +34,13 @@ exports.accountBalance = async (req, res, next) => {
   }
   return next();
 };
+exports.checkIfUserAreadyExist = async (req, res, next) => {
+  const user = await userService.getUserByPhoneNumber(req.body.phoneNumber);
+  if (user) {
+    return res.status(409).send({ status: 409, message: 'This phoneNumber is Already Taken' });
+  }
+  return next();
+};
 
 exports.checkAmountLimit = async (req, res, next) => {
   if (req.body.amount > 2000000) {
@@ -46,13 +51,12 @@ exports.checkAmountLimit = async (req, res, next) => {
 
 exports.checkRegistration = async (req, res) => {
   const user = await userService.getUserByPhoneNumber(req.params.phoneNumber);
+  const response = await smsService.generateOtp(req.params.phoneNumber);
   if (!user || (user && !user.verified)) {
-    const response = await smsService.generateOtp(req.params.phoneNumber);
-    console.log(response.data);
-    return res.status(200).send({ phoneNumber: req.params.phoneNumber, verified: false });
+    return res.status(200).send({ phoneNumber: req.params.phoneNumber, verified: false, code: response.data.data.code });
   }
   const { verified, phoneNumber } = user;
-  return res.status(200).send({ verified, phoneNumber });
+  return res.status(200).send({ verified, phoneNumber, code: response.data.data.code });
 };
 
 exports.sendResetPin = async (req, res) => {
@@ -66,22 +70,11 @@ exports.sendResetPin = async (req, res) => {
   return res.status(200).send({ verified, phoneNumber });
 };
 
-exports.updatePin = async (req, res) => {
-  const newPassword = req.body.password;
-  const user = await userService.getUserByPhoneNumber(req.params.phoneNumber);
-  console.log(req.params);
-  if (user) {
-    user.password = newPassword;
-    await user.save();
-    return res.status(200).send(user);
-  }
-};
-
 exports.checkDefaultPassword = (req, res, next) => {
   if (req.body.password === '0000') {
     return res.status(401).send({
       status: 401,
-      message: 'Please register and PIN shouldnot be 0000',
+      message: 'Please register and PIN should not be 0000',
     });
   }
   return next();

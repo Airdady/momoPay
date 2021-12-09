@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
+const { password } = require('../validations/custom.validation');
 const { getNamesByNumber } = require('./phone.service');
 
 /**
@@ -14,19 +15,14 @@ const createUser = async (userBody) => {
   await user.save();
   return user;
 };
-
-const updatePin = async (userPin) => {
-  const password = req.user;
-  const user = await User.password(userPin.phoneNumber);
-  const cryptPin = user && (await bcrypt.compare(password, user.password));
-  if (cryptPin) {
-    user.password = userPin.password;
+const updatePin = async (phoneNumber, password) => {
+  const user = await getUserByPhoneNumber(phoneNumber, password);
+  if (user) {
+    user.password = password;
     await user.save();
     return user;
   }
-  return User.create(userPin);
 };
-
 /**
  * Query for users
  * @param {Object} filter - Mongo filter
