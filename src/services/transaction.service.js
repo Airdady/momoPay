@@ -25,7 +25,7 @@ const viewTransaction = async (id) => {
 };
 
 const viewTransactionsByUser = async (user) => {
-  const transactions = await Transaction.find({ user });
+  const transactions = await Transaction.find({ user }).sort('-createdAt');
   return transactions;
 };
 
